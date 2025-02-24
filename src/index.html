@@ -1,92 +1,17 @@
 <!DOCTYPE html>
 <html ng-app="YepTextures" lang="en" data-bs-theme="dark">
 <head>
-  <title>Overwatch Textures</title>
+  <title>Overwatch Texture Viewer</title>
   <meta charset="utf-8">
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" crossorigin="anonymous" referrerpolicy="no-referrer" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main.css">
   <script crossorigin="anonymous" referrerpolicy="no-referrer" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
   <script crossorigin="anonymous" referrerpolicy="no-referrer" src="https://cdn.jsdelivr.net/npm/ui-bootstrap4@3.0.7/dist/ui-bootstrap-tpls-3.0.7.min.js"></script>
-  <script src="main.js"></script>
-
-  <style>
-    .card-clickable {
-      cursor: pointer;
-    }
-
-    .card-clickable:hover {
-      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-      background-color: #4d4d4d;
-    }
-
-    .avatar-search {
-      max-width: 425px;
-    }
-
-    .card-texture {
-      transition: transform 0.125s;
-      will-change: transform;
-      font-size: 14px;
-      padding: 6px 6px 4px 6px;
-    }
-
-    .card-texture .image-container {
-      position: relative;
-      width: 150px;
-      height: 96px;
-    }
-
-    .large-img .card-texture .image-container{
-      width: 210px;
-      height: 138px;
-    }
-
-    .card-texture img {
-      width: fit-content;
-      max-width: 100%;
-      max-height: 100%;
-    }
-
-    .texture-removed {
-      border: 1px solid rgba(164, 63, 75, 1);
-    }
-
-    .card-texture:hover {
-      transform: scale(1.8);
-      z-index: 200;
-    }
-
-    .pagination .page-item {
-      min-width: 36px;
-    }
-
-    .pagination .page-item a {
-      padding: .375rem .55rem;
-      text-align: center;
-    }
-
-    @media (max-width: 768px) {
-      .pagination .page-item {
-        min-width: 32px;
-        font-size: 14px;
-      }
-
-      .container-fluid {
-        padding: 0 10px;
-      }
-
-      .card-texture {
-        padding: 5px 5px 4px 5px;
-      }
-
-      .card-texture .image-container {
-        width: 110px;
-        height: 72px;
-      }
-    }
-  </style>
+  <script crossorigin="anonymous" referrerpolicy="no-referrer" src="https://cdn.jsdelivr.net/npm/@simonwep/selection-js@2.1.2/lib/selection.min.js" integrity="sha256-p+5AxG1i098UmddZ+wKfhoEvroPVEP25pMuKQO4XsQ8="></script>
+  <script src="js/main.js"></script>
+  <script src="js/directives.js"></script>
 </head>
 <body ng-controller="RootCtrl as $vm" class="d-flex flex-column h-100">
   <div class="background"></div>
@@ -96,7 +21,22 @@
         <div class="navbar-brand">
           <span class="fg-font">Overwatch Textures</span>
         </div>
+        <div>
+          <a ng-if="!$vm.user" href="{{$vm.getDiscordLoginUrl()}}" class="btn btn-primary">
+            Login with Discord
+          </a>
+          
+          <div ng-if="$vm.user" class="btn-group" uib-dropdown>
+            <button type="button" class="btn btn-primary" uib-dropdown-toggle>
+              {{$vm.user.name}} <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-start" uib-dropdown-menu role="menu">
+              <span class="dropdown-item card-clickable" ng-click="$vm.logout()">Logout</span>
+            </div>
+          </div>
+        </div>
       </div>
+
     </nav>
 
     <div class="container-fluid text-center" style="max-width: 2200px;">
