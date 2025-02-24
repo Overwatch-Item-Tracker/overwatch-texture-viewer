@@ -1,0 +1,13 @@
+name = "overwatch-texture-viewer"
+pages_build_output_dir = "src"
+compatibility_date = "2025-02-24"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "overwatch-texture-viewer-dev"
+database_id = "8ab2a19d-0d02-4c9e-8887-03459ea59975"
+
+[env.production]
+d1_databases = [
+    { binding = "DB", database_name = "overwatch-texture-viewer-prod", database_id = "6b24d2fc-899b-4f49-b5af-4fb6877c0e99" },
+]

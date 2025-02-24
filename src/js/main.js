@@ -31,6 +31,8 @@ app.controller('RootCtrl', ['$scope', '$http', '$location', function($scope, $ht
   this.filterVersion = 0
   this.filterState = +query.state || 0
 
+  this.user = null
+
   this.onPageSizeChange = () => {
     $location.search('pageSize', this.pageSize === DEFAULT_PAGE_SIZE ? null : this.pageSize)
   }
@@ -115,7 +117,63 @@ app.controller('RootCtrl', ['$scope', '$http', '$location', function($scope, $ht
     return hexId.padStart(12, '0')
   }
 
+  this.logout = async () => {
+    try {
+      await $http.post('/api/auth/logout')
+      window.location.reload()
+    } catch (err) {
+      console.error('Failed to logout', err)
+    }
+  }
+
+  this.getDiscordLoginUrl = () => {
+    const redirectUri = encodeURIComponent(`${location.origin}/api/auth/discord_login`)  
+    return `https://discord.com/api/oauth2/authorize?client_id=1343405239872786543&redirect_uri=${redirectUri}&response_type=code&scope=identify+guilds`
+  }
+
+  function parseJwt(token) {
+    try {
+      const base64Url = token.split('.')[1]
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      }).join(''))
+      const payload = JSON.parse(jsonPayload)
+      // check if the token is expired
+      if (payload.exp < Date.now() / 1000) {
+        console.error('Token expired')
+        return null
+      }
+
+      return payload
+    } catch (e) {
+      return null
+    }
+  }
+
+  function getCookie(name) {
+    const value = `; ${document.cookie}`
+    const parts = value.split(`; ${name}=`)
+    if (parts.length === 2) return parts.pop().split(';').shift()
+    return null
+  }
+
+  const checkLoginStatus = () => {
+    const token = getCookie('token')
+    if (token) {
+      const userData = parseJwt(token)
+      if (userData) {
+        vm.user = {
+          name: userData.name,
+          guid: userData.guid,
+          isAdmin: userData.admin
+        }
+      }
+    }
+  }
+
   vm.$onInit = async () => {
+    checkLoginStatus()
     try {
       const response = await $http.get('https://assets.overwatchitemtracker.com/data/texture_info.json')
 
@@ -164,14 +222,3 @@ app.controller('RootCtrl', ['$scope', '$http', '$location', function($scope, $ht
     return `https://assets.overwatchitemtracker.com/textures/${id}.png`
   }
 }])
-
-app.filter('start', function () {
-  return function (input, start) {
-    if (!input || !input.length) {
-      return
-    }
-
-    start = +start
-    return input.slice(start)
-  }
-})
