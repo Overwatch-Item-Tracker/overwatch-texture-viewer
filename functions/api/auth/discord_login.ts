@@ -16,7 +16,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   }
 
   try {
-    // Exchange code for token
     const tokenResponse = await fetch(`${DISCORD_API}/oauth2/token`, {
       method: 'POST',
       headers: {
@@ -47,8 +46,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       return handleDiscordError(userResponse, userResult, 'Failed to get user info')
     }
 
-    console.log('userResult', userResult)
-
     const guildResponse = await fetch(`${DISCORD_API}/users/@me/guilds`, {
       headers: {
         Authorization: `Bearer ${tokenResult.access_token}`,
@@ -65,7 +62,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       return ApiErrorResponse(403, 'User is not a member of the required Discord server')
     }
 
-    // Find or create user in database
     let user = await findUserByDiscordId(env.DB, userResult.id)
     const displayName = getDiscordName(userResult)
     
@@ -76,7 +72,6 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
         discord_id: userResult.id,
       })
     } else if (user.display_name !== displayName) {
-      // Update display name if it changed
       await updateUserDisplayName(env.DB, user.id, displayName)
       user.display_name = displayName
     }
