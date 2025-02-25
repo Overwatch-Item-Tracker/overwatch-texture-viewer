@@ -1,0 +1,5 @@
+ENVIRONMENT = "Development"
+JWT_SECRET = "secret"
+DISCORD_CLIENT_ID = "12345"
+DISCORD_CLIENT_SECRET = "1234"
+DISCORD_REDIRECT_URI = "http://127.0.0.1:8788/api/auth/discord_login"
