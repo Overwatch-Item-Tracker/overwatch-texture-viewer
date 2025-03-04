@@ -126,11 +126,6 @@ app.controller('RootCtrl', ['$scope', '$http', '$location', function($scope, $ht
     }
   }
 
-  this.getDiscordLoginUrl = () => {
-    const redirectUri = encodeURIComponent(`${location.origin}/api/auth/discord_login`)  
-    return `https://discord.com/api/oauth2/authorize?client_id=1343405239872786543&redirect_uri=${redirectUri}&response_type=code&scope=identify+guilds`
-  }
-
   function parseJwt(token) {
     try {
       const base64Url = token.split('.')[1]

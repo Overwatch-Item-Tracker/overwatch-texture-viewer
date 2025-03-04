@@ -22,10 +22,10 @@
           <span class="fg-font">Overwatch Textures</span>
         </div>
         <div>
-          <a ng-if="!$vm.user" href="{{$vm.getDiscordLoginUrl()}}" class="btn btn-primary">
+          <a ng-if="!$vm.user" href="/api/auth/initiate" class="btn btn-primary">
             Login with Discord
           </a>
-          
+
           <div ng-if="$vm.user" class="btn-group" uib-dropdown>
             <button type="button" class="btn btn-primary" uib-dropdown-toggle>
               {{$vm.user.name}} <span class="caret"></span>
