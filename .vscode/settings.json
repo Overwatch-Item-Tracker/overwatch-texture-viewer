@@ -1,0 +1,6 @@
+{
+	"git.branchProtection": [
+		"master",
+		"v2"
+	]
+}
