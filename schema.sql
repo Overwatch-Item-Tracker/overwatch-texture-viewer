@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS assets (
 
 CREATE TABLE IF NOT EXISTS assets_tags (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    asset_id TEXT NOT NULL,
+    asset_id INTEGER NOT NULL,
     tag_id INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(asset_id) REFERENCES assets(id),
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS assets_tags (
 
 CREATE TABLE IF NOT EXISTS assets_tags_history (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    asset_id TEXT NOT NULL,
+    asset_id INTEGER NOT NULL,
     tag_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     action INTEGER NOT NULL,
